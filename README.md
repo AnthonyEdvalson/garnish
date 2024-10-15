@@ -39,13 +39,12 @@ If people want me to add it to package managers I will.
 
 Garnishing is starts with the output of `hash(x)` for the given data. However, in later steps it's useful to have a more rigorous hashing function that also guarantees that similar inputs produce dissimilar outputs. The default hash implementations don't always follow this rule, especially with integers, where `hash(x) == x`.
 
-So, the result of `hash(x)` is scrambled using some [bit twiddling](https://stackoverflow.com/a/12996028). Without this step the outputs would all be very similar to one another:
+So, the result of `hash(x)` is scrambled using some [bit twiddling](https://stackoverflow.com/a/12996028). Without this step the outputs for nearby integers would all be very similar to one another:
 
 ```
 garnish(0, detail=3) -> Abbed Smith is an academic abolitionist
 garnish(1, detail=3) -> Abbey Smith is an academic abolitionist
 garnish(2, detail=3) -> Abbie Smith is an academic abolitionist
-garnish(3, detail=3) -> Abby Smith is an academic abolitionist
 ```
 
 To turn the result of our scrambled hash into a sentence we use modular arithmetic. This is done using mixed bases, and is the same method used for formatting times into something like 16:23:10. In the case of timess, the seconds in the day is being converted to base 24:60:60. In this case we are turning the scrambled hash into base 2789:3999:1423:1171. Those bases come from the lengths of the word lists for the first name, last name, occupation, and adjective, and each value correcponds to a word in the list. So 10:20:30:40 corresponds to first name `Adelaide`, last name `Lee`, occupation of `anaconda`, and adjective of `appreciative`. Formatting it all gives `Adelaide Lee is an appreciative anaconda`.
